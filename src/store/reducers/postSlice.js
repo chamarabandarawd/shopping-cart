@@ -7,18 +7,18 @@ const initialState={
     error:null
 }
 
-export const getPost= createAsyncThunk('getPost',async()=>{
-    try {
-        const res= await fetch('https://jsonplaceholder.typicode.com/posts')
-        const data=await res.json();
-        if(data){
-            return data
-        }else{
-            return{err:'some error'}
+export const getPost= createAsyncThunk('getPost',async(name)=>{
+    const res= await fetch('https://jsonplaceholder.typicode.com/posts')
+    const data=await res.json();
+    if(Array.isArray(data)){
+        return {
+            name,
+            data
         }
-    } catch (error) {
+    }else{
         return{err:'some error'}
     }
+
 })
 
 const postSlice=createSlice({
@@ -27,8 +27,13 @@ const postSlice=createSlice({
     reducers:{},
     extraReducers:(builder)=>{
         builder.addCase(getPost.fulfilled,(state,action)=>{
-            state.loading='completed';
-            state.data=action.payload;
+           if(action.payload.err){
+            state.loading='failed';
+            state.error=action.payload;
+           }else{
+               state.loading='completed';
+               state.data=action.payload;
+           }
         })
         builder.addCase(getPost.pending,(state)=>{
             state.loading='pending'
