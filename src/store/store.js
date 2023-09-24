@@ -6,9 +6,9 @@ import laptopSliceReducer from "./reducers/laptopSlice";
 const store=configureStore({
     reducer:{
         cart: cartSliceReducer,
-        laptop:laptopSliceReducer
+        laptop:laptopSliceReducer,
     }
    
 });
 
-export default store;
+export  default store;
